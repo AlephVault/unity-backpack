@@ -5,6 +5,9 @@
   "description": "Allows the developer to create inventory rulesets and models, and also some default UI implementation.",
   "unity": "2018.1",
   "dependencies": {
+    "com.alephvault.unity.support": "0.0.1",
+    "com.alephvault.unity.layout": "0.0.1",
+    "com.alephvault.unity.menuactions": "0.0.1"
   },
   "author": {
     "name": "Game Mean Machine",
