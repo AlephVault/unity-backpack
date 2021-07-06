@@ -1,4 +1,4 @@
-# backpack
+# BackPack
 This is the BackPack project, which allows the developer to create inventory rulesets and models, and also some default UI implementation.
 
 # Install
