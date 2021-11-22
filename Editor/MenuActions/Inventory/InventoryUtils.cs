@@ -78,7 +78,6 @@ namespace GameMeanMachine.Unity.BackPack
                     private void OnGUI()
                     {
 						minSize = windowSize;
-						maxSize = minSize;
 						GUIStyle longLabelStyle = MenuActionUtils.GetSingleLabelStyle();
 
 						titleContent = new GUIContent("Back Pack - Creating a new HUD simple & single inventory view");
