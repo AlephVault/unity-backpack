@@ -1,11 +1,14 @@
 {
-    "name": "GameMeanMachine.Unity.BackPack.Runtime",
+    "name": "AlephVault.Unity.BackPack.Editor",
     "references": [
         "AlephVault.Unity.Support.Runtime",
-        "AlephVault.Unity.Layout.Runtime"
+        "AlephVault.Unity.BackPack.Runtime",
+        "AlephVault.Unity.MenuActions.Editor"
     ],
     "optionalUnityReferences": [],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

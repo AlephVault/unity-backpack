@@ -7,14 +7,14 @@ using UnityEngine.UI;
 using UnityEditor;
 using AlephVault.Unity.Support.Utils;
 
-namespace GameMeanMachine.Unity.BackPack
+namespace AlephVault.Unity.BackPack
 {
     namespace MenuActions
     {
         namespace Inventory
         {
             using AlephVault.Unity.MenuActions.Utils;
-            using GameMeanMachine.Unity.BackPack.Authoring.Behaviours.UI.Inventory.Basic;
+            using AlephVault.Unity.BackPack.Authoring.Behaviours.UI.Inventory.Basic;
 
             /// <summary>
             ///   Menu actions to create inventory view components.

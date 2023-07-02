@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace GameMeanMachine.Unity.BackPack
+namespace AlephVault.Unity.BackPack
 {
 	using Authoring.Behaviours.Inventory.ManagementStrategies.SpatialStrategies;
 

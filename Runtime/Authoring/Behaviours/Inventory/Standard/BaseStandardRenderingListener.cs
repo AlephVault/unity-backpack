@@ -3,7 +3,7 @@ using UnityEngine;
 using AlephVault.Unity.Support.Utils;
 using AlephVault.Unity.Layout.Utils;
 
-namespace GameMeanMachine.Unity.BackPack
+namespace AlephVault.Unity.BackPack
 {
     namespace Authoring
     {

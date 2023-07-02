@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace GameMeanMachine.Unity.BackPack
+namespace AlephVault.Unity.BackPack
 {
     namespace Authoring
     {

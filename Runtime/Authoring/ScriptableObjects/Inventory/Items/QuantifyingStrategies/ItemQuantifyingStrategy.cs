@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace GameMeanMachine.Unity.BackPack
+namespace AlephVault.Unity.BackPack
 {
     namespace Authoring
     {

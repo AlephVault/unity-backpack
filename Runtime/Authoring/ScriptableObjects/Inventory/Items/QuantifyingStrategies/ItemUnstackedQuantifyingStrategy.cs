@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GameMeanMachine.Unity.BackPack
+namespace AlephVault.Unity.BackPack
 {
 	using Types.Inventory.Stacks.QuantifyingStrategies;
 

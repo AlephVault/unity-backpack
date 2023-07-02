@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameMeanMachine.Unity.BackPack
+namespace AlephVault.Unity.BackPack
 {
     using Authoring.ScriptableObjects.Inventory.Items;
     using Authoring.ScriptableObjects.Inventory.Items.RenderingStrategies;
