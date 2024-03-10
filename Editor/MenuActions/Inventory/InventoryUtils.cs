@@ -70,8 +70,6 @@ namespace AlephVault.Unity.BackPack
                     private int pageLabelWidth, selectedItemLabelWidth;
                     private int controlWidth, controlHeight;
 
-                    private bool clicked = false;
-
                     protected override void OnAdjustedGUI()
                     {
 						GUIStyle longLabelStyle = MenuActionUtils.GetSingleLabelStyle();
@@ -227,18 +225,9 @@ namespace AlephVault.Unity.BackPack
                         EditorGUILayout.EndHorizontal();
 
                         EditorGUILayout.Space();
-                        clicked = GUILayout.Button("Create Inventory");
+                        SmartButton("Create Inventory", Execute, CloseType.OnSuccess);
                     }
-
-                    protected override void OnAfterAdjustedGUI()
-                    {
-	                    if (clicked)
-	                    {
-		                    clicked = false;
-		                    Execute();
-	                    }
-                    }
-
+                    
                     private void MakeInventoryContainer(GameObject inventory)
                     {
                         Image inventoryBackground = inventory.AddComponent<Image>();
