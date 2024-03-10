@@ -232,7 +232,11 @@ namespace AlephVault.Unity.BackPack
 
                     protected override void OnAfterAdjustedGUI()
                     {
-	                    if (clicked) Execute();
+	                    if (clicked)
+	                    {
+		                    clicked = false;
+		                    Execute();
+	                    }
                     }
 
                     private void MakeInventoryContainer(GameObject inventory)
