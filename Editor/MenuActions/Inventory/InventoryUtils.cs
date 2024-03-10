@@ -225,7 +225,7 @@ namespace AlephVault.Unity.BackPack
                         EditorGUILayout.EndHorizontal();
 
                         EditorGUILayout.Space();
-                        SmartButton("Create Inventory", Execute, CloseType.OnSuccess);
+                        SmartButton("Create Inventory", Execute);
                     }
                     
                     private void MakeInventoryContainer(GameObject inventory)
@@ -415,7 +415,6 @@ namespace AlephVault.Unity.BackPack
                         MakeSelectionLabelControl(inventoryView);
                         MakeBodyControls(inventoryView);
                         Undo.RegisterCreatedObjectUndo(inventoryView, "Create Basic Inventory View");
-                        Close();
                     }
                 }
 
