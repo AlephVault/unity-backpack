@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using AlephVault.Unity.Support.Utils;
+using AlephVault.Unity.MenuActions.Types;
 
 namespace AlephVault.Unity.BackPack
 {
@@ -25,11 +22,9 @@ namespace AlephVault.Unity.BackPack
                 private static Sprite sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
                 private static Sprite inputFieldBackground = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/InputFieldBackground.psd");
 
-                public class CreateBasicInventoryViewWindow : EditorWindow
+                public class CreateBasicInventoryViewWindow : SmartEditorWindow
                 {
 					public Transform selectedTransform = null;
-
-                    private Vector2 windowSize = new Vector2(963, 689);
 
                     // Main container properties
                     private Color backgroundColor = Color.white;
@@ -69,15 +64,16 @@ namespace AlephVault.Unity.BackPack
                     private int labelFontSize = 10;
 
                     // Derivated data:
-                    int cellWidth, cellHeight;
-                    int gridWidth, gridHeight;
-                    int buttonWidth, buttonHeight;
-                    int pageLabelWidth, selectedItemLabelWidth;
-                    int controlWidth, controlHeight;
+                    private int cellWidth, cellHeight;
+                    private int gridWidth, gridHeight;
+                    private int buttonWidth, buttonHeight;
+                    private int pageLabelWidth, selectedItemLabelWidth;
+                    private int controlWidth, controlHeight;
 
-                    private void OnGUI()
+                    private bool clicked = false;
+
+                    protected override void OnAdjustedGUI()
                     {
-						minSize = windowSize;
 						GUIStyle longLabelStyle = MenuActionUtils.GetSingleLabelStyle();
 
 						titleContent = new GUIContent("Back Pack - Creating a new HUD simple & single inventory view");
@@ -231,8 +227,12 @@ namespace AlephVault.Unity.BackPack
                         EditorGUILayout.EndHorizontal();
 
                         EditorGUILayout.Space();
+                        clicked = GUILayout.Button("Create Inventory");
+                    }
 
-                        if (GUILayout.Button("Create Inventory")) Execute();
+                    protected override void OnAfterAdjustedGUI()
+                    {
+	                    if (clicked) Execute();
                     }
 
                     private void MakeInventoryContainer(GameObject inventory)
