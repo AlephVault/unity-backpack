@@ -21,10 +21,15 @@ namespace AlephVault.Unity.BackPack
                 private static Sprite background = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
                 private static Sprite sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
                 private static Sprite inputFieldBackground = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/InputFieldBackground.psd");
-
+                
                 public class CreateBasicInventoryViewWindow : SmartEditorWindow
                 {
-					public Transform selectedTransform = null;
+	                protected override float GetSmartWidth()
+	                {
+		                return 768;
+	                }
+
+	                public Transform selectedTransform = null;
 
                     // Main container properties
                     private Color backgroundColor = Color.white;
