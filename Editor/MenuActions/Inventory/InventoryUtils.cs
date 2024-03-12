@@ -79,7 +79,7 @@ namespace AlephVault.Unity.BackPack
                     {
 						GUIStyle longLabelStyle = MenuActionUtils.GetSingleLabelStyle();
 
-						titleContent = new GUIContent("Back Pack - Creating a new HUD simple & single inventory view");
+						titleContent = new GUIContent("BackPack - Creating a new HUD simple & single inventory view");
 						EditorGUILayout.LabelField(
 							"This wizard will create a new view for a simple & single inventory under the selected HUD canvas. " +
 							"There is a default implementation (called the 'basic single & simple' one) that will be used, and " +
@@ -424,9 +424,9 @@ namespace AlephVault.Unity.BackPack
                 }
 
 				/// <summary>
-				///   This method is used in the assets menu action: GameObject > Back Pack > Inventory > Create Basic Inventory View.
+				///   This method is used in the assets menu action: GameObject > BackPack > Inventory > Create Basic Inventory View.
 				/// </summary>
-				[MenuItem("GameObject/AlephVault/Back Pack/Inventory/Create Basic Inventory View", false, 11)]
+				[MenuItem("GameObject/Aleph Vault/BackPack/Inventory/Create Basic Inventory View", false, 11)]
 				public static void AddBasicInventory()
 				{
 					CreateBasicInventoryViewWindow window = ScriptableObject.CreateInstance<CreateBasicInventoryViewWindow>();
@@ -435,7 +435,7 @@ namespace AlephVault.Unity.BackPack
 					window.ShowUtility();
 				}
 
-				[MenuItem("GameObject/AlephVault/Back Pack/Inventory/Create Basic Inventory View", true)]
+				[MenuItem("GameObject/Aleph Vault/BackPack/Inventory/Create Basic Inventory View", true)]
 				public static bool CanAddBasicInventory()
 				{
 					return Selection.activeTransform != null && Selection.activeTransform.GetComponent<Canvas>();

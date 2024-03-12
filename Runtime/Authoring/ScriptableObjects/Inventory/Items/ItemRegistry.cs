@@ -21,7 +21,7 @@ namespace AlephVault.Unity.BackPack
                     ///       know the keys.
                     ///   </para>
                     /// </summary>
-                    [CreateAssetMenu(fileName = "NewInventoryItemRegistry", menuName = "AlephVault/Wind Rose/Inventory/Item Registry", order = 202)]
+                    [CreateAssetMenu(fileName = "NewInventoryItemRegistry", menuName = "Aleph Vault/WindRose/Inventory/Item Registry", order = 202)]
                     public class ItemRegistry : ScriptableObject
                     {
                         private static Dictionary<string, ItemRegistry> registries = new Dictionary<string, ItemRegistry>();

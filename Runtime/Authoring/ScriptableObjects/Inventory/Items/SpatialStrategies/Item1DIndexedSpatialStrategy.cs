@@ -17,7 +17,7 @@ namespace AlephVault.Unity.BackPack
                         ///     They are intended to occupy a single slot in a sequential
                         ///     inventory spatial management strategy.
                         /// </summary>
-                        [CreateAssetMenu(fileName = "NewInventoryItem1DIndexedSpatialStrategy", menuName = "AlephVault/Wind Rose/Inventory/Item Strategies/Spatial/1D Indexed", order = 101)]
+                        [CreateAssetMenu(fileName = "NewInventoryItem1DIndexedSpatialStrategy", menuName = "Aleph Vault/WindRose/Inventory/Item Strategies/Spatial/1D Indexed", order = 101)]
                         public class Item1DIndexedSpatialStrategy : ItemSpatialStrategy
                         {
                         }

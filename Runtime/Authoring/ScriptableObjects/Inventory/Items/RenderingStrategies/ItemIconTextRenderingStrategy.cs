@@ -18,7 +18,7 @@ namespace AlephVault.Unity.BackPack
                         ///     to be rendered as a single item in a single slot (according
                         ///     to the quantity).
                         /// </summary>
-                        [CreateAssetMenu(fileName = "NewInventoryItemIconTextRenderingStrategy", menuName = "AlephVault/Wind Rose/Inventory/Item Strategies/Rendering/Icon & Text", order = 101)]
+                        [CreateAssetMenu(fileName = "NewInventoryItemIconTextRenderingStrategy", menuName = "Aleph Vault/WindRose/Inventory/Item Strategies/Rendering/Icon & Text", order = 101)]
                         public class ItemIconTextRenderingStrategy : ItemStaticRenderingStrategy
                         {
                             /// <summary>

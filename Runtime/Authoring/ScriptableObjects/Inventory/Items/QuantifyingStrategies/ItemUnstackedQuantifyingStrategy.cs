@@ -18,7 +18,7 @@ namespace AlephVault.Unity.BackPack
                         ///   Unstacked strategies do not make a stack of items.
                         ///   This actually means: they only make stacks of ONE item.
                         /// </summary>
-                        [CreateAssetMenu(fileName = "NewInventoryItemUnstackedQuantifyingStrategy", menuName = "AlephVault/Wind Rose/Inventory/Item Strategies/Quantifying/Unstacked", order = 101)]
+                        [CreateAssetMenu(fileName = "NewInventoryItemUnstackedQuantifyingStrategy", menuName = "Aleph Vault/WindRose/Inventory/Item Strategies/Quantifying/Unstacked", order = 101)]
                         public class ItemUnstackedQuantifyingStrategy : ItemQuantifyingStrategy
                         {
                             /// <summary>

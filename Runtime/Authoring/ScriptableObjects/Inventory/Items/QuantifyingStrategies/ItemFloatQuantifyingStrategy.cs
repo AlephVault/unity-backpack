@@ -23,9 +23,9 @@ namespace AlephVault.Unity.BackPack
                         ///   <para>
                         ///     Quite often a maximum amount is specified to
                         ///       limit the stacks.
-                        ///   </para>1
+                        ///   </para>1F
                         /// </summary>
-                        [CreateAssetMenu(fileName = "NewInventoryItemFloatQuantifyingStrategy", menuName = "AlephVault/Wind Rose/Inventory/Item Strategies/Quantifying/Float-Stacked", order = 101)]
+                        [CreateAssetMenu(fileName = "NewInventoryItemFloatQuantifyingStrategy", menuName = "Aleph Vault/WindRose/Inventory/Item Strategies/Quantifying/Float-Stacked", order = 101)]
                         public class ItemFloatQuantifyingStrategy : ItemQuantifyingStrategy
                         {
                             /// <summary>
