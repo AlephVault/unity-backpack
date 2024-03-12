@@ -25,7 +25,7 @@ namespace AlephVault.Unity.BackPack
                         ///       limit the stacks.
                         ///   </para>
                         /// </summary>
-                        [CreateAssetMenu(fileName = "NewInventoryItemIntegerQuantifyingStrategy", menuName = "Wind Rose/Inventory/Item Strategies/Quantifying/Integer-Stacked", order = 101)]
+                        [CreateAssetMenu(fileName = "NewInventoryItemIntegerQuantifyingStrategy", menuName = "AlephVault/Wind Rose/Inventory/Item Strategies/Quantifying/Integer-Stacked", order = 101)]
                         public class ItemIntegerQuantifyingStrategy : ItemQuantifyingStrategy
                         {
                             /// <summary>

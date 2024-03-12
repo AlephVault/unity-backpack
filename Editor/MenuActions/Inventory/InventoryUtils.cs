@@ -426,7 +426,7 @@ namespace AlephVault.Unity.BackPack
 				/// <summary>
 				///   This method is used in the assets menu action: GameObject > Back Pack > Inventory > Create Basic Inventory View.
 				/// </summary>
-				[MenuItem("GameObject/Back Pack/Inventory/Create Basic Inventory View", false, 11)]
+				[MenuItem("GameObject/AlephVault/Back Pack/Inventory/Create Basic Inventory View", false, 11)]
 				public static void AddBasicInventory()
 				{
 					CreateBasicInventoryViewWindow window = ScriptableObject.CreateInstance<CreateBasicInventoryViewWindow>();
@@ -435,7 +435,7 @@ namespace AlephVault.Unity.BackPack
 					window.ShowUtility();
 				}
 
-				[MenuItem("GameObject/Back Pack/Inventory/Create Basic Inventory View", true)]
+				[MenuItem("GameObject/AlephVault/Back Pack/Inventory/Create Basic Inventory View", true)]
 				public static bool CanAddBasicInventory()
 				{
 					return Selection.activeTransform != null && Selection.activeTransform.GetComponent<Canvas>();

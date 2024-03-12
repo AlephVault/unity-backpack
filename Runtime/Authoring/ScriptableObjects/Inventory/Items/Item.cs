@@ -33,7 +33,7 @@ namespace AlephVault.Unity.BackPack
                     ///       in the game.
                     ///   </para>
                     /// </summary>
-                    [CreateAssetMenu(fileName = "NewInventoryItem", menuName = "Wind Rose/Inventory/Item", order = 201)]
+                    [CreateAssetMenu(fileName = "NewInventoryItem", menuName = "AlephVault/Wind Rose/Inventory/Item", order = 201)]
                     public class Item : ScriptableObject
                     {
                         /// <summary>
