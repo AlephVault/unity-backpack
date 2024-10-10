@@ -33,7 +33,7 @@ namespace AlephVault.Unity.BackPack
                     ///       in the game.
                     ///   </para>
                     /// </summary>
-                    [CreateAssetMenu(fileName = "NewInventoryItem", menuName = "Aleph Vault/WindRose/Inventory/Item", order = 201)]
+                    [CreateAssetMenu(fileName = "NewInventoryItem", menuName = "Aleph Vault/BackPack/Inventory/Item", order = 201)]
                     public class Item : ScriptableObject
                     {
                         /// <summary>
@@ -138,7 +138,7 @@ namespace AlephVault.Unity.BackPack
                         ///       logic.
                         ///   </para>
                         ///   <para>
-                        ///     These strategies will depend among themselves, and one of them will be marked
+                        ///     These strategies will depend on themselves, and one of them will be marked
                         ///       as main by setting it as value in <see cref="mainUsageStrategy"/>.
                         ///   </para>
                         /// </summary>
@@ -168,11 +168,11 @@ namespace AlephVault.Unity.BackPack
 
                         /// <summary>
                         ///   <para>
-                        ///     Rendering strategies are the ones responsible of providing data to the rendering
+                        ///     Rendering strategies are the ones responsible for providing data to the rendering
                         ///       strategy on the inventory strategy.
                         ///   </para>
                         ///   <para>
-                        ///     These strategies will depend among themselves, and one of them will be marked
+                        ///     These strategies will depend on themselves, and one of them will be marked
                         ///       as main by setting it as value in <see cref="mainRenderingStrategy"/>.
                         ///   </para>
                         /// </summary>
