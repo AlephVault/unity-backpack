@@ -24,23 +24,6 @@ namespace AlephVault.Unity.BackPack
                     /// </typeparam>
                     public abstract class ItemStrategy<T> : ScriptableObject where T : class
                     {
-                        /// <summary>
-                        ///   Item this stategy is attached to.
-                        /// </summary>
-                        public Item Item
-                        {
-                            get; private set;
-                        }
-
-                        /// <summary>
-                        ///   Invoked by the item, this method initializes this
-                        ///     strategy's item only once.
-                        /// </summary>
-                        /// <param name="item">The item to assign</param>
-                        public void Initialize(Item item)
-                        {
-                            if (Item == null) { Item = item; }
-                        }
                     }
                 }
             }
