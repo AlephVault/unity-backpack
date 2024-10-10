@@ -7,23 +7,23 @@
             namespace Stacks
             {
                 /// <summary>
-                ///    <para>
-                ///      A stack strategy will be barely more than a simple
-                ///        data bundle: in many cases it will not hold logic
-                ///        on its own except for non-side-effected logic that
-                ///        would compute data without altering anything.
-                ///    </para>
-                ///    <para>
-                ///      Stack strategies are created by corresponding item
-                ///        strategies, and so they will return appropriate
-                ///        reference to their creators.It will also hold a
-                ///        reference to the stack it is bound to.
-                ///    </para>
-                ///    <para>
+                ///   <para>
+                ///     A stack strategy will be barely more than a simple
+                ///     data bundle: in many cases it will not hold logic
+                ///     on its own except for non-side-effected logic that
+                ///     would compute data without altering anything.
+                ///   </para>
+                ///   <para>
+                ///     Stack strategies are created by corresponding item
+                ///     strategies, and so they will return appropriate
+                ///     reference to their creators.It will also hold a
+                ///     reference to the stack it is bound to.
+                ///   </para>
+                ///   <para>
                 ///      It has a method to export its settings, as a counterpart
-                ///        of the fact that it receives certain arguments in
-                //         its constructor.By default it returns null.
-                ///    </para>
+                ///      of the fact that it receives certain arguments in
+                ///      its constructor.By default it returns null.
+                ///   </para>
                 /// </summary>
                 /// <typeparam name="T">The base item strategy type</typeparam>
                 public abstract class StackStrategy<T> where T : class
