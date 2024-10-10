@@ -41,7 +41,7 @@ namespace AlephVault.Unity.BackPack
                         /// <summary>
                         ///   Enumerates all the registries (and their respective per-registry key).
                         /// </summary>
-                        /// <returns>An enumerable of pairs of keys and registries</returns>
+                        /// <returns>A IEnumerable of pairs of keys and registries</returns>
                         public static IEnumerable<KeyValuePair<string, ItemRegistry>> Registries()
                         {
                             return registries.AsEnumerable();
@@ -64,7 +64,7 @@ namespace AlephVault.Unity.BackPack
                         /// <summary>
                         ///   Enumerates all the items in the registry (and their respective per-item key).
                         /// </summary>
-                        /// <returns>An enumerable of pairs of keys and items</returns>
+                        /// <returns>A IEnumerable of pairs of keys and items</returns>
                         public IEnumerable<KeyValuePair<uint, Item>> Items()
                         {
                             return items.AsEnumerable();
