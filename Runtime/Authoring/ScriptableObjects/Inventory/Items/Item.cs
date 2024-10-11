@@ -17,7 +17,6 @@ namespace AlephVault.Unity.BackPack
                 {
                     using UnityEngine;
                     using Types.Inventory.Stacks;
-                    using Types.Inventory.Stacks.QuantifyingStrategies;
                     using Types.Inventory.Stacks.RenderingStrategies;
                     using Types.Inventory.Stacks.UsageStrategies;
                     using AlephVault.Unity.Layout.Utils;
@@ -69,10 +68,7 @@ namespace AlephVault.Unity.BackPack
                         /// <summary>
                         ///   See <see cref="registry"/>.
                         /// </summary>
-                        public ItemRegistry Registry
-                        {
-                            get { return registry; }
-                        }
+                        public ItemRegistry Registry => registry;
 
                         /// <summary>
                         ///   <para>
@@ -90,29 +86,52 @@ namespace AlephVault.Unity.BackPack
                         /// <summary>
                         ///   See <see cref="key"/>.
                         /// </summary>
-                        public uint Key
-                        {
-                            get { return key; }
-                        }
+                        public uint Key => key;
 
                         /// <summary>
-                        ///   The quantifying strategy to use. You will often use an instance of
-                        ///     <see cref="QuantifyingStrategies.ItemUnstackedQuantifyingStrategy"/>
-                        ///     or <see cref="QuantifyingStrategies.ItemIntegerQuantifyingStrategy"/>,
-                        ///     or perhaps <see cref="QuantifyingStrategies.ItemFloatQuantifyingStrategy"/>
-                        ///     but this is a rare case. You will rarely need to create your own subclass,
-                        ///     but you may.
+                        ///   The maximum (absolute) quantity that can be stacked together.
+                        ///   Be default it's 10000 (based on some games) but it can be any
+                        ///   positive integer value (0 means there's no max). This tells
+                        ///   how many fractions of units (see <see cref="amountPerUnit"/>
+                        ///   for this) will a storage stack of this object have at most.
                         /// </summary>
                         [SerializeField]
-                        private QuantifyingStrategies.ItemQuantifyingStrategy quantifyingStrategy;
+                        private int maxStackQuantity = 10000;
+                        
+                        /// <summary>
+                        ///   What's the integer size of a unit of this object. By default,
+                        ///   it's 1, and typically it will be 1 (0 will be converted to 1).
+                        ///   E.g. if this value is 4, then the item will be stored in
+                        ///   multiples of 0.25, while if it's 100, then the item will be
+                        ///   stored in multiples of 0.01.
+                        /// </summary>
+                        [SerializeField]
+                        private int amountPerUnit = 1;
 
                         /// <summary>
-                        ///   See <see cref="QuantifyingStrategy"/>.
+                        ///   See <see cref="maxStackQuantity" />.
                         /// </summary>
-                        public QuantifyingStrategies.ItemQuantifyingStrategy QuantifyingStrategy
-                        {
-                            get { return quantifyingStrategy; }
-                        }
+                        public int MaxStackQuantity => maxStackQuantity;
+
+                        /// <summary>
+                        ///   See <see cref="amountPerUnit" />.
+                        /// </summary>
+                        public int AmountPerUnit => amountPerUnit;
+
+                        /// <summary>
+                        ///   Tells whether this item is an unstacked one.
+                        /// </summary>
+                        public bool IsUnstacked => AmountPerUnit == 1 && MaxStackQuantity == 1;
+
+                        /// <summary>
+                        ///   Tells whether this item is stacked in a fractional quantity.
+                        /// </summary>
+                        public bool IsFractional => AmountPerUnit > 1;
+
+                        /// <summary>
+                        ///   Tells whether this item is stacked in an integral quantity.
+                        /// </summary>
+                        public bool IsIntegral => AmountPerUnit == 1;
 
                         /// <summary>
                         ///   <para>
@@ -213,6 +232,9 @@ namespace AlephVault.Unity.BackPack
                                     Registered = registry.AddItem(this);
                                 }
 
+                                if (amountPerUnit <= 0) amountPerUnit = 1;
+                                if (maxStackQuantity < 0) maxStackQuantity = 0;
+
                                 // Flatten (and check!) dependencies among all of them
                                 sortedUsageStrategies = Assets.FlattenDependencies<UsageStrategies.ItemUsageStrategy, RequireUsageStrategy>(usageStrategies, true);
                                 sortedRenderingStrategies = Assets.FlattenDependencies<RenderingStrategies.ItemRenderingStrategy, RequireRenderingStrategy>(renderingStrategies, true);
@@ -220,8 +242,6 @@ namespace AlephVault.Unity.BackPack
                                 renderingStrategiesByType = Assets.AvoidDuplicateDependencies(sortedRenderingStrategies);
                                 usageStrategiesByType = Assets.AvoidDuplicateDependencies(usageStrategies);
                                 spatialStrategiesByType = Assets.AvoidDuplicateDependencies(spatialStrategies);
-                                Assets.CrossCheckDependencies<UsageStrategies.ItemUsageStrategy, QuantifyingStrategies.ItemQuantifyingStrategy, RequireQuantifyingStrategy>(usageStrategies, quantifyingStrategy);
-                                Assets.CrossCheckDependencies<RenderingStrategies.ItemRenderingStrategy, QuantifyingStrategies.ItemQuantifyingStrategy, RequireQuantifyingStrategy>(sortedRenderingStrategies, quantifyingStrategy);
                                 Assets.CrossCheckDependencies<RenderingStrategies.ItemRenderingStrategy, UsageStrategies.ItemUsageStrategy, RequireUsageStrategy>(sortedRenderingStrategies, usageStrategies);
                                 Assets.CrossCheckDependencies<RenderingStrategies.ItemRenderingStrategy, SpatialStrategies.ItemSpatialStrategy, RequireSpatialStrategy>(sortedRenderingStrategies, spatialStrategies);
                                 // Check both main strategies
@@ -324,7 +344,6 @@ namespace AlephVault.Unity.BackPack
                              *   actually depend on what an inventory determines, and rendering strategies do not have own data.
                              */
                             int index;
-                            StackQuantifyingStrategy stackQuantifyingStrategy = quantifyingStrategy.CreateStackStrategy(quantity);
                             // StackSpatialStrategy stackSpatialStrategy = spatialStrategy.CreateStackStrategy();
                             StackUsageStrategy[] stackUsageStrategies = new StackUsageStrategy[sortedUsageStrategies.Length];
                             StackUsageStrategy mainStackUsageStrategy = null;
@@ -365,7 +384,7 @@ namespace AlephVault.Unity.BackPack
                              * Creating the stack with the strategies.
                              */
                             Stack stack = new Stack(
-                                this, stackQuantifyingStrategy, stackUsageStrategies, mainStackUsageStrategy, stackRenderingStrategies, mainStackRenderingStrategy
+                                this, stackUsageStrategies, mainStackUsageStrategy, stackRenderingStrategies, mainStackRenderingStrategy
                             );
 
                             return stack;

@@ -160,7 +160,7 @@ namespace AlephVault.Unity.BackPack
                         /// <summary>
                         ///   Convenience method. See <see cref="InventoryManagementStrategyHolder.Take(object, object, object, bool)"/>.
                         /// </summary>
-                        public Stack Take(int position, object quantity, bool disallowEmpty)
+                        public Stack Take(int position, int? quantity, bool disallowEmpty)
                         {
                             return inventoryHolder.Take(Position.Instance, position, quantity, disallowEmpty);
                         }
@@ -168,7 +168,7 @@ namespace AlephVault.Unity.BackPack
                         /// <summary>
                         ///   Convenience method. See <see cref="InventoryManagementStrategyHolder.Split(object, object, object, object, object, out object)"/>.
                         /// </summary>
-                        public bool Split(int sourcePosition, object quantity,
+                        public bool Split(int sourcePosition, int quantity,
                                           int newPosition, int? finalNewPosition)
                         {
                             object finalNewOPosition;

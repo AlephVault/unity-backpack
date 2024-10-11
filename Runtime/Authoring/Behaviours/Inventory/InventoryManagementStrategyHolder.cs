@@ -230,7 +230,7 @@ namespace AlephVault.Unity.BackPack
                     }
 
                     /**
-                     * This method will perfirm an optimal put: filling existing matching stacks before adding this new stack to
+                     * This method will perform an optimal put: filling existing matching stacks before adding this new stack to
                      *   the inventory.
                      */
                     private bool OptimalPut(object containerPosition, object stackPosition, Stack stack, out object finalStackPosition)
@@ -248,7 +248,7 @@ namespace AlephVault.Unity.BackPack
                         //   opportunity to also redistribute the stack to optimize its occupancy.
 
                         // We will track the current quantity to add/saturate here.
-                        object currentQuantity = stack.Quantity;
+                        int currentQuantity = stack.Quantity;
 
                         IEnumerable<Stack> matchedStacks = spatialStrategy.FindAll(containerPosition, stack, false);
 
@@ -256,9 +256,9 @@ namespace AlephVault.Unity.BackPack
                         //   queued in the list above.
                         foreach (Stack matchedStack in matchedStacks)
                         {
-                            object quantityAdded;
-                            object quanityLeft;
-                            object finalQuantity;
+                            int quantityAdded;
+                            int quanityLeft;
+                            int finalQuantity;
                             bool wouldSaturate = matchedStack.WillOverflow(currentQuantity, out finalQuantity, out quantityAdded, out quanityLeft);
                             if (wouldSaturate)
                             {
@@ -282,7 +282,7 @@ namespace AlephVault.Unity.BackPack
                             {
                                 queuedStack.Saturate();
                             }
-                            unsaturatedLastStack.ChangeQuantityBy(currentQuantity);
+                            unsaturatedLastStack.ChangeQuantityBy((int)currentQuantity);
 
                             // Render everything
                             foreach (Stack queuedStack in stacksToSaturate)
@@ -362,7 +362,7 @@ namespace AlephVault.Unity.BackPack
                     /// <returns>Whether the stack could be put in the inventory's container (i.e. available position was appropriately got)</returns>
                     public bool Put(object containerPosition, object stackPosition, Stack stack, out object finalStackPosition, bool? optimalPutOnNullPosition = null)
                     {
-                        if (!stack.QuantifyingStrategy.HasAllowedQuantity())
+                        if (!stack.HasAllowedQuantity())
                         {
                             throw new StackRejectedException(StackRejectedException.RejectionReason.InvalidQuantity);
                         }
@@ -479,7 +479,7 @@ namespace AlephVault.Unity.BackPack
                             return false;
                         }
 
-                        object quantityLeft;
+                        int quantityLeft;
                         Stack.MergeResult result = destination.Merge(source, out quantityLeft);
 
                         if (result != Stack.MergeResult.Denied)
@@ -538,7 +538,7 @@ namespace AlephVault.Unity.BackPack
                             return false;
                         }
 
-                        object quantityLeft;
+                        int quantityLeft;
                         Stack.MergeResult result = destination.Merge(source, out quantityLeft);
 
                         if (result != Stack.MergeResult.Denied)
@@ -573,7 +573,7 @@ namespace AlephVault.Unity.BackPack
                     /// <param name="quantity">The quantity to take</param>
                     /// <param name="disallowEmpty">Whether we disallow the case of taking ALL the quantity, or we allow it</param>
                     /// <returns>A stack with the same specs, except for the quantity, or null if such quantity could not be taken</returns>
-                    public Stack Take(object containerPosition, object stackPosition, object quantity, bool disallowEmpty)
+                    public Stack Take(object containerPosition, object stackPosition, int? quantity, bool disallowEmpty)
                     {
                         positioningStrategy.CheckPosition(containerPosition);
                         Stack found = Find(containerPosition, stackPosition);
@@ -610,7 +610,7 @@ namespace AlephVault.Unity.BackPack
                     /// <param name="newStackPosition">The position of the destination stack</param>
                     /// <param name="finalNewStackPosition">Output parameter returning the final position given for the new stack</param>
                     /// <returns>Whether the split could be performed (stack was found, quantity was available, and destination was free)</returns>
-                    public bool Split(object sourceContainerPosition, object sourceStackPosition, object quantity,
+                    public bool Split(object sourceContainerPosition, object sourceStackPosition, int quantity,
                                       object newContainerPosition, object newStackPosition, out object finalNewStackPosition)
                     {
                         Stack found = Find(sourceContainerPosition, sourceStackPosition);
@@ -620,7 +620,7 @@ namespace AlephVault.Unity.BackPack
                             if (!Put(newContainerPosition, newStackPosition, newStack, out finalNewStackPosition))
                             {
                                 // Could not put the new stack - refund its quantity.
-                                found.ChangeQuantityBy(quantity);
+                                found.ChangeQuantityBy((int)quantity);
                                 return false;
                             }
                             else
@@ -807,7 +807,7 @@ namespace AlephVault.Unity.BackPack
                             {
                                 object stackPosition = stackPair.Item1;
                                 Stack stack = stackPair.Item2;
-                                Tuple<ScriptableObjects.Inventory.Items.Item, object, object> dumped = stack.Dump();
+                                Tuple<ScriptableObjects.Inventory.Items.Item, int, object> dumped = stack.Dump();
                                 serializedInventory[containerPosition][stackPosition] = new Types.Inventory.SerializedStack(dumped.Item1.Registry.Key, dumped.Item1.Key, dumped.Item2, dumped.Item3);
                             }
                         }

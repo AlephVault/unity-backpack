@@ -22,7 +22,7 @@
                 ///   <para>
                 ///      It has a method to export its settings, as a counterpart
                 ///      of the fact that it receives certain arguments in
-                ///      its constructor.By default it returns null.
+                ///      its constructor. By default, it returns null.
                 ///   </para>
                 /// </summary>
                 /// <typeparam name="T">The base item strategy type</typeparam>

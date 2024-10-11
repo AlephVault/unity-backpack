@@ -27,6 +27,11 @@ namespace AlephVault.Unity.BackPack
                 /// </summary>
                 public class Stack
                 {
+                    /// <summary>
+                    ///   The current quantity of this stack.
+                    /// </summary>
+                    public int Quantity { get; private set; }
+                    
                     private UsageStrategies.StackUsageStrategy[] usageStrategies;
                     private Dictionary<Type, UsageStrategies.StackUsageStrategy> usageStrategiesByType;
                     /// <summary>
@@ -50,16 +55,7 @@ namespace AlephVault.Unity.BackPack
                     {
                         get; private set;
                     }
-
-                    /// <summary>
-                    ///   The quantifying strategy of this stack. It will be related to the underlying
-                    ///     item's quantifying strategy (and also limited by it!).
-                    /// </summary>
-                    public QuantifyingStrategies.StackQuantifyingStrategy QuantifyingStrategy
-                    {
-                        get; private set;
-                    }
-
+                    
                     /// <summary>
                     ///   The position this stack has on its current container. This means this position
                     ///     will be according to THAT specific container (and in particular: its spatial
@@ -103,20 +99,17 @@ namespace AlephVault.Unity.BackPack
                     ///    <see cref="ScriptableObjects.Inventory.Items.Item.Create(object, object)"/>.
                     /// </summary>
                     /// <param name="item">The item to refer from this stack</param>
-                    /// <param name="quantifyingStrategy">A stack quantifying strategy</param>
                     /// <param name="usageStrategies">Many stack usage strategies</param>
                     /// <param name="mainUsageStrategy">A main stack usage strategy among the ones in <paramref name="usageStrategies"/></param>
                     /// <param name="renderingStrategies">Many stack rendering strategies</param>
                     /// <param name="mainRenderingStrategy">A main stack rendering strategy among the ones in <paramref name="renderingStrategies"/></param>
                     public Stack(Authoring.ScriptableObjects.Inventory.Items.Item item,
-                                 QuantifyingStrategies.StackQuantifyingStrategy quantifyingStrategy,
                                  UsageStrategies.StackUsageStrategy[] usageStrategies,
                                  UsageStrategies.StackUsageStrategy mainUsageStrategy,
                                  RenderingStrategies.StackRenderingStrategy[] renderingStrategies,
                                  RenderingStrategies.StackRenderingStrategy mainRenderingStrategy)
                     {
                         Item = item;
-                        QuantifyingStrategy = quantifyingStrategy;
                         this.usageStrategies = usageStrategies;
                         this.renderingStrategies = renderingStrategies;
                         MainUsageStrategy = mainUsageStrategy;
@@ -128,7 +121,6 @@ namespace AlephVault.Unity.BackPack
                         /*
                          * Initializing the stack strategies.
                          */
-                        quantifyingStrategy.Initialize(this);
                         foreach (UsageStrategies.StackUsageStrategy strategy in usageStrategies)
                         {
                             usageStrategiesByType[strategy.GetType()] = strategy;
@@ -145,19 +137,20 @@ namespace AlephVault.Unity.BackPack
                     ///   Serializes its content into a tuple (item, quantity, arbitrary data).
                     /// </summary>
                     /// <returns>A tuple representation of this stack: (item, quantity, arbitrary data)</returns>
-                    public Tuple<Authoring.ScriptableObjects.Inventory.Items.Item, object, object> Dump()
+                    public Tuple<Authoring.ScriptableObjects.Inventory.Items.Item, int, object> Dump()
                     {
-                        return new Tuple<Authoring.ScriptableObjects.Inventory.Items.Item, object, object>(Item, QuantifyingStrategy.Quantity, MainUsageStrategy.Export());
+                        return new Tuple<Authoring.ScriptableObjects.Inventory.Items.Item, int, object>(Item, Quantity, MainUsageStrategy.Export());
                     }
 
                     /**
                      * All the public methods go here.
                      */
 
-                    /**
-                     * Clones the stack almost entirely - only quantity is not included but passed externally.
-                     */
-                    private Stack Clone(QuantifyingStrategies.StackQuantifyingStrategy quantifyingStrategy)
+                    /// <summary>
+                    ///   Clones the stack with a different quantity, and the new stack is not attached to any inventory container.
+                    /// </summary>
+                    /// <returns>The cloned stack</returns>
+                    public Stack Clone(int quantity)
                     {
                         UsageStrategies.StackUsageStrategy[] clonedUsageStrategies = new UsageStrategies.StackUsageStrategy[usageStrategies.Length];
                         UsageStrategies.StackUsageStrategy clonedMainUsageStrategy = null;
@@ -191,8 +184,7 @@ namespace AlephVault.Unity.BackPack
                             index++;
                         }
 
-                        return new Stack(Item, quantifyingStrategy,
-                                         clonedUsageStrategies, clonedMainUsageStrategy,
+                        return new Stack(Item, clonedUsageStrategies, clonedMainUsageStrategy,
                                          clonedRenderingStrategies, clonedMainRenderingStrategy);
                     }
 
@@ -202,18 +194,9 @@ namespace AlephVault.Unity.BackPack
                     /// <returns>The cloned stack</returns>
                     public Stack Clone()
                     {
-                        return Clone(QuantifyingStrategy.Clone());
+                        return Clone(Quantity);
                     }
-
-                    /// <summary>
-                    ///   Clones the stack with a different quantity, and the new stack is not attached to any inventory container.
-                    /// </summary>
-                    /// <returns>The cloned stack</returns>
-                    public Stack Clone(object quantity)
-                    {
-                        return Clone(QuantifyingStrategy.Clone(quantity));
-                    }
-
+                    
                     /// <summary>
                     ///   Checks whether this stack has an allowed (in-constraints) nonzero
                     ///     quantity. Stacks not being able to satisfy this condition will not
@@ -222,7 +205,7 @@ namespace AlephVault.Unity.BackPack
                     /// <returns>Whether the quantity is allowed and non-zero</returns>
                     public bool IsAllowedNonZeroQuantity()
                     {
-                        return QuantifyingStrategy.HasAllowedQuantity() && !QuantifyingStrategy.IsEmpty();
+                        return Quantity <= Item.MaxStackQuantity && !IsEmpty();
                     }
 
                     /// <summary>
@@ -236,7 +219,7 @@ namespace AlephVault.Unity.BackPack
                     ///   It will return null if either the quantities are invalid or <paramref name="disallowEmpty"/>
                     ///     is true and the quantity to be taken was null or all
                     /// </remarks>
-                    public Stack Take(object quantity, bool disallowEmpty)
+                    public Stack Take(int? quantity, bool disallowEmpty)
                     {
                         if (quantity == null)
                         {
@@ -246,9 +229,9 @@ namespace AlephVault.Unity.BackPack
                             quantity = Quantity;
                         }
 
-                        if (QuantifyingStrategy.ChangeQuantityBy(quantity, true, disallowEmpty))
+                        if ((!disallowEmpty || quantity.Value != Quantity) && ChangeQuantityBy((int)quantity.Value))
                         {
-                            return Clone(quantity);
+                            return Clone(quantity.Value);
                         }
                         return null;
                     }
@@ -282,12 +265,12 @@ namespace AlephVault.Unity.BackPack
                     ///   </para>
                     ///   <para>
                     ///     Please consider the following notes: This method does not affect the source
-                    ///       stack but instead affects the target stack. This means: without the cares
-                    ///       of manually handling the source stack later, one could end with twice the
-                    ///       expected amount somewhere.
+                    ///     stack but instead affects the target stack. This means: without the cares of
+                    ///     manually handling the source stack later, one could end with twice the expected
+                    ///     amount somewhere.
                     ///   </para>
                     ///   <para>
-                    ///     The resulf of the merge may be:
+                    ///     The result of the merge may be:
                     ///     <list type="number">
                     ///       <item>
                     ///         <term>Denied</term>
@@ -301,8 +284,8 @@ namespace AlephVault.Unity.BackPack
                     ///         <term>Partial</term>
                     ///         <description>
                     ///           The merge was successful but not with the whole quantity. This means
-                    ///             that the destination quantity filled up and there is still some
-                    ///             quantity as difference, which will remain on the source stack.
+                    ///           that the destination quantity filled up and there is still some
+                    ///           quantity as difference, which will remain on the source stack.
                     ///         </description>
                     ///       </item>
                     ///       <item>
@@ -315,22 +298,22 @@ namespace AlephVault.Unity.BackPack
                     ///   </para>
                     ///   <para>
                     ///     As an output parameter, returns the quantity left on the source stack. The
-                    ///       caller should explicitly set such value in the source stack by calling the
-                    ///       following method: <c>source.ChangeQuantityTo(quantityLeft)</c>.
-                    ///     However this will vary depending on the needs.
+                    ///     caller should explicitly set such value in the source stack by calling the
+                    ///     following method: <c>source.ChangeQuantityTo(quantityLeft)</c>.
+                    ///     However, this will vary depending on the needs.
                     ///   </para>
                     /// </summary>
                     /// <param name="source">The source stack to merge in this one</param>
                     /// <param name="quantityLeft">The remaining quantity that was not merged</param>
                     /// <returns>An enumerated value according to the notes</returns>
-                    public MergeResult Merge(Stack source, out object quantityLeft)
+                    public MergeResult Merge(Stack source, out int quantityLeft)
                     {
-                        // preset to null so we can leave control safely
-                        quantityLeft = null;
+                        // preset to null so we can leave control safely.
+                        quantityLeft = 0;
 
-                        // this one would tell the quantity effectively added to, and final in, the stack
-                        object quantityAdded = null;
-                        object finalQuantity = null;
+                        // this one would tell the quantity effectively added to, and final in, the stack.
+                        int quantityAdded;
+                        int finalQuantity;
 
                         if (Item != source.Item || IsFull() || !IsAllowedNonZeroQuantity() || !source.IsAllowedNonZeroQuantity())
                         {
@@ -338,23 +321,24 @@ namespace AlephVault.Unity.BackPack
                         }
 
                         // We test saturation to know which quantities to add
-                        bool saturates = QuantifyingStrategy.WillOverflow(source.QuantifyingStrategy.Quantity, out finalQuantity, out quantityAdded, out quantityLeft);
+                        bool saturates = WillOverflow(Quantity, out finalQuantity, out quantityAdded, out quantityLeft);
 
                         /*
                          * This will happen now:
                          * 1. The spatial strategy will not be affected.
-                         * 2. The quantifying strategy will be set to the final quantity.
-                         * 3. The rendering strategies will not be affected.
-                         * 4. The usage strategies will behave differently:
+                         * 2. The rendering strategies will not be affected.
+                         * 3. The usage strategies will behave differently:
                          */
 
-                        // Now we compute the interpolations for each usagestrategy (stacks will have them
+                        // Now we compute the interpolations for each UsageStrategy (stacks will have them
                         //   in the same order) by manually zipping everything.
                         int index = 0;
                         Action[] interpolators = new Action[usageStrategies.Length];
                         foreach(UsageStrategies.StackUsageStrategy usageStrategy in usageStrategies)
                         {
-                            Action interpolator = usageStrategy.Interpolate(source.usageStrategies[index], QuantifyingStrategy.Quantity, quantityAdded);
+                            Action interpolator = usageStrategy.Interpolate(
+                                source.usageStrategies[index], Quantity, quantityAdded
+                            );
                             if (interpolator == null)
                             {
                                 // If at least an interpolator fails, we abort everything.
@@ -371,7 +355,7 @@ namespace AlephVault.Unity.BackPack
 
                         // We reached this point because all the interpolators have been found.
                         // If you coded the saturation method appropriately, this will work.
-                        QuantifyingStrategy.ChangeQuantityTo(finalQuantity, true);
+                        if (finalQuantity > 0) ChangeQuantityTo(finalQuantity);
 
                         // We are ok with this.
                         return saturates ? MergeResult.Partial : MergeResult.Total;
@@ -400,59 +384,66 @@ namespace AlephVault.Unity.BackPack
                         }
                         return false;
                     }
-
+                    
                     /// <summary>
-                    ///   The quantity. See <see cref="QuantifyingStrategies.StackQuantifyingStrategy.Quantity"/> for more details.
-                    /// </summary>
-                    public object Quantity
-                    {
-                        get { return QuantifyingStrategy.Quantity; }
-                    }
-
-                    /// <summary>
-                    ///   Tells whether the stack is full. See <see cref="QuantifyingStrategies.StackQuantifyingStrategy.IsFull"/>
-                    ///     for more details.
+                    ///   Tells whether the stack is full.
                     /// </summary>
                     /// <returns>Whether the stack is full</returns>
                     public bool IsFull()
                     {
-                        return QuantifyingStrategy.IsFull();
+                        return Item.MaxStackQuantity != 0 && Quantity == Item.MaxStackQuantity;
                     }
 
                     /// <summary>
-                    ///   Tells whether the stack is empty. See <see cref="QuantifyingStrategies.StackQuantifyingStrategy.IsEmpty"/>
-                    ///     for more details.
+                    ///   Tells whether the stack is empty.
                     /// </summary>
                     /// <returns>Whether the stack is empty</returns>
                     public bool IsEmpty()
                     {
-                        return QuantifyingStrategy.IsEmpty();
+                        return Quantity == 0;
                     }
 
                     /// <summary>
-                    ///   Modifies the quantity of the stack. See <see cref="QuantifyingStrategies.StackQuantifyingStrategy.ChangeQuantityBy(object, bool, bool)"/>
-                    ///     for more details.
+                    ///   Modifies the quantity of the stack.
                     /// </summary>
                     /// <param name="quantity">The quantity delta to apply</param>
                     /// <returns>Whether the change could be performed</returns>
-                    public bool ChangeQuantityBy(object quantity)
+                    public bool ChangeQuantityBy(int quantity)
                     {
-                        return QuantifyingStrategy.ChangeQuantityBy(quantity, false, false);
+                        return ChangeQuantityTo(Quantity + quantity);
                     }
 
                     /// <summary>
-                    ///   Tells whether the stack would overflow its allowed maximum quantity when trying to add a certain quantity. See
-                    ///     <see cref="QuantifyingStrategies.StackQuantifyingStrategy.WillOverflow(object, out object, out object, out object)"/>
-                    ///     for more details.
+                    ///   Tells whether the stack would overflow its allowed maximum quantity when trying to add a
+                    ///   certain quantity.
                     /// </summary>
                     /// <param name="quantity">The quantity to add</param>
                     /// <param name="finalQuantity">The quantity that would be final to the stack</param>
                     /// <param name="quantityAdded">The quantity that would be effectively added from the given quantity</param>
                     /// <param name="quantityLeft">The quantity that would not be added from the given quantity</param>
                     /// <returns>Whether the quantity would overflow the maximum</returns>
-                    public bool WillOverflow(object quantity, out object finalQuantity, out object quantityAdded, out object quantityLeft)
+                    public bool WillOverflow(int quantity, out  int finalQuantity, out int quantityAdded, out int quantityLeft)
                     {
-                        return QuantifyingStrategy.WillOverflow(quantity, out finalQuantity, out quantityAdded, out quantityLeft);
+                        int maxQuantity = Item.MaxStackQuantity;
+                        if (Item.MaxStackQuantity == 0)
+                        {
+                            finalQuantity = Quantity + quantity;
+                            quantityAdded = quantity;
+                            quantityLeft = 0;
+                            return false;
+                        }
+                        int potentialQuantity = Quantity + quantity;
+                        if (potentialQuantity > Item.MaxStackQuantity)
+                        {
+                            finalQuantity = Item.MaxStackQuantity;
+                            quantityAdded = maxQuantity - Quantity;
+                            quantityLeft = potentialQuantity - maxQuantity;
+                            return true;
+                        }
+                        finalQuantity = potentialQuantity;
+                        quantityAdded = quantity;
+                        quantityLeft = 0;
+                        return false;
                     }
 
                     /// <summary>
@@ -462,18 +453,34 @@ namespace AlephVault.Unity.BackPack
                     /// <returns>Whether the saturation could be done</returns>
                     public bool Saturate()
                     {
-                        return QuantifyingStrategy.Saturate();
+                        if (Item.MaxStackQuantity == 0) return false;
+                        Quantity = Item.MaxStackQuantity;
+                        return true;
                     }
 
                     /// <summary>
-                    ///   Changes the stack's quantity to a specific value. See <see cref="QuantifyingStrategies.StackQuantifyingStrategy.ChangeQuantityTo(object, bool)"/>
-                    ///     for more details.
+                    ///   Changes the stack's quantity to a specific value.
                     /// </summary>
                     /// <param name="quantity">The new quantity to set</param>
                     /// <returns>Whether the quantity could be set</returns>
-                    public bool ChangeQuantityTo(object quantity)
+                    public bool ChangeQuantityTo(int quantity)
                     {
-                        return QuantifyingStrategy.ChangeQuantityTo(quantity, false);
+                        if (quantity < 0) return false;
+
+                        if (Item.MaxStackQuantity == 0 || quantity <= Item.MaxStackQuantity)
+                        {
+                            Quantity = quantity;
+                            return true;
+                        }
+                        return false;
+                    }
+                    
+                    /// <summary>
+                    ///   Tells whether this stack has an allowed quantity or not.
+                    /// </summary>
+                    public bool HasAllowedQuantity()
+                    {
+                        return Quantity <= Item.MaxStackQuantity;
                     }
                 }
             }
