@@ -390,7 +390,7 @@ namespace AlephVault.Unity.BackPack
                         //      we are having right now).
                         if (stackPosition == null && optimalPutOnNullPosition == true)
                         {
-                            return OptimalPut(containerPosition, stackPosition, stack, out finalStackPosition);
+                            return OptimalPut(containerPosition, null, stack, out finalStackPosition);
                         }
                         else
                         {
