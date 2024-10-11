@@ -133,9 +133,8 @@ namespace AlephVault.Unity.BackPack
                         /// </summary>
                         public bool Put(int? position, Stack stack, out int? finalPosition, bool? optimalPutOnNullPosition = null)
                         {
-                            object finalOPosition;
-                            bool result = inventoryHolder.Put(Position.Instance, position, stack, out finalOPosition, optimalPutOnNullPosition);
-                            finalPosition = finalOPosition == null ? null : (int?)finalOPosition;
+                            bool result = inventoryHolder.Put(Position.Instance, position, stack, out var finalOPosition, optimalPutOnNullPosition);
+                            finalPosition = (int?)finalOPosition;
                             return result;
                         }
 
