@@ -397,7 +397,8 @@ namespace AlephVault.Unity.BackPack
                     [CanEditMultipleObjects]
                     public class ItemEditor : Editor
                     {
-                        SerializedProperty quantifyingStrategy;
+                        SerializedProperty maxStackQuantity;
+                        SerializedProperty amountPerUnit;
                         SerializedProperty spatialStrategies;
                         SerializedProperty usageStrategies;
                         SerializedProperty renderingStrategies;
@@ -406,7 +407,8 @@ namespace AlephVault.Unity.BackPack
 
                         protected virtual void OnEnable()
                         {
-                            quantifyingStrategy = serializedObject.FindProperty("quantifyingStrategy");
+                            maxStackQuantity = serializedObject.FindProperty("maxStackQuantity");
+                            amountPerUnit = serializedObject.FindProperty("amountPerUnit");
                             spatialStrategies = serializedObject.FindProperty("spatialStrategies");
                             usageStrategies = serializedObject.FindProperty("usageStrategies");
                             renderingStrategies = serializedObject.FindProperty("renderingStrategies");
@@ -438,7 +440,8 @@ namespace AlephVault.Unity.BackPack
                         {
                             serializedObject.Update();
 
-                            EditorGUILayout.PropertyField(quantifyingStrategy);
+                            EditorGUILayout.PropertyField(maxStackQuantity, true);
+                            EditorGUILayout.PropertyField(amountPerUnit, true);
                             EditorGUILayout.PropertyField(spatialStrategies, true);
                             EditorGUILayout.PropertyField(usageStrategies, true);
                             mainUsageStrategy.objectReferenceValue = RelatedPopup("Main Usage Strategy", usageStrategies, mainUsageStrategy.objectReferenceValue);
