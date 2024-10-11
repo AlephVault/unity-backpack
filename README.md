@@ -179,7 +179,34 @@ Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Quantifying/Float-S
 
 #### Spatial Strategies
 
+Spatial strategies tell how an item is stored in an inventory. Each item needs at least one spatial strategy, and each
+spatial strategy determines which type of inventory will be able to accept the item. Examples:
 
+1. One item without spatial strategy cannot be used as an item.
+2. One item with "simple" spatial strategy can be stored in "simple" (linear) inventories.
+3. One item with "rectangled" spatial strategy can be stored in a "rectangled" inventory.
+   E.g. like this is done in games like Diablo or Neverwinter Nights.
+4. One item with "simple" spatial strategy and "rectangled" strategy can be stored in both
+   "simple" and "rectangled" inventories.
+
+This means: each spatial strategy allows being stored on different inventory types.
+
+_just in case, "rectangled" inventories are not supported in this version_.
+
+_Also: users can define new types of spatial strategies and their corresponding inventory strategies as needed_.
+
+##### Spatial Strategy: 1D-indexed
+
+This is a "simple" spatial strategy for items: The item occupies a single place inside a 1-dimensional list given by
+its index.
+
+In order to create this strategy object, this is the menu option:
+
+```
+Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Quantifying/Float-Stacked
+```
+
+Only one asset of this type is needed, and can be added to as many items as needed.
 
 #### Usage Strategies
 
