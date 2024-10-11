@@ -131,9 +131,55 @@ With this in mind, items can be registered into these registries. Still, there's
 
 ### Assets: Inventory item strategies
 
+Strategies are assets that act as subcomponents that can (and will) be added to the `Item` assets.
+
+Some strategy assets are shared among many items, to the point that perhaps only one strategy instance is needed.
+
 #### Quantifying Strategies
 
+The quantifying strategies are those that define how will this object be stacked in a single place (e.g. potions being stacked up to 100).
+
+There are three subtypes:
+
+##### Quantifying Strategy: Unstacked
+
+This quantifying strategy is for objects that cannot be grouped together. Typically, weapons or big items.
+
+They can be created by clicking this menu option:
+
+```
+Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Quantifying/Unstacked
+```
+
+This asset requires no configuration. It can be directly used as a quantifying strategy on any one or more inventory item.
+
+Only one item of this type is needed.
+
+##### Quantifying Strategy: Integer-Stacked
+
+This quantifying strategy is for objects that can be grouped together. Typically, consumable items.
+
+They can be created by clicking this menu options:
+
+```
+Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Quantifying/Integer-Stacked
+```
+
+This asset requires a configuration: a `Max` integer value. E.g. `100`. Many items may share this quantifying strategy.
+
+One is needed for each maximum quantity that needs to be defined (e.g. one for 100, one for 25, ...).
+
+##### Quantifying Strategy: Float-Stacked
+
+This is less common: Works the same as Integer-Stacked but with float values.
+
+```
+Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Quantifying/Float-Stacked
+```
+
 #### Spatial Strategies
+
+
 
 #### Usage Strategies
 
