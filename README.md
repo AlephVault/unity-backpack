@@ -231,6 +231,11 @@ As with others, only one asset of this type is needed to be shared by all the ob
 
 #### Rendering Strategies
 
+Rendering strategies are a different type of strategies: they don't describe the _logic_ of the inventory (position,
+stacking or usage) but instead describe how will the object be rendered in a _view_. Rendering strategies provide all
+the data that can be used by a _view_ (but not necessarily each view _must_ use all the provided data by the item's
+rendering strategy).
+
 ## Behaviours: Inventories and strategies
 
 ## Data types: Stacks and strategies
