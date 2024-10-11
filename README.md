@@ -210,6 +210,25 @@ Only one asset of this type is needed, and can be added to as many items as need
 
 #### Usage Strategies
 
+Usage strategies are the more complex objects to understand here, since they need a way to define the behaviour that
+will be triggered when the object is somehow _used_.
+
+These are per-game items, so almost no usage strategy class is provided by this package but only a _dummy_ or _null_
+one in which no logic is performed at all. Users must define their own usage strategy classes.
+
+##### Usage Strategy: Null
+
+This usage strategy does nothing. It's useful for objects which are not meant to be used (objects that are critical,
+can be traded, or some sort of special tokens).
+
+It can be created by clicking this menu:
+
+```
+Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Usage/Null Usage (e.g. tokens, critical objects)
+```
+
+As with others, only one asset of this type is needed to be shared by all the objects that need no usage execution.
+
 #### Rendering Strategies
 
 ## Behaviours: Inventories and strategies
