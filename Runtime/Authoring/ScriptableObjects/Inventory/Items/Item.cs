@@ -337,7 +337,7 @@ namespace AlephVault.Unity.BackPack
                         ///   A new stack, not bound to any inventory but referencing this item
                         ///     and the appropriate strategies
                         /// </returns>
-                        public Stack Create(object quantity, object argument)
+                        public Stack Create(int quantity, object argument)
                         {
                             /*
                              * Creating children strategies. Spatial and rendering strategies need no arguments since spatial strategies
@@ -386,6 +386,7 @@ namespace AlephVault.Unity.BackPack
                             Stack stack = new Stack(
                                 this, stackUsageStrategies, mainStackUsageStrategy, stackRenderingStrategies, mainStackRenderingStrategy
                             );
+                            stack.ChangeQuantityTo(quantity);
 
                             return stack;
                         }
