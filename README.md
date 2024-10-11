@@ -85,6 +85,25 @@ This is quite important for the items themselves. While they are _passive_ objec
 
 _Again: strategies will be described later_.
 
+An example to understand how an item is defined would look like this:
+
+1. Sword:
+   - Quantifying strategy: Non-stacked.
+   - Usage strategies:
+     - Code that harms the player in front (also, the main usage strategy).
+   - Spatial Strategies:
+     - A single position in a very basic inventory settings (almost all games match this).
+   - Rendering Strategies:
+     - A single rendering strategy displaying image (a sword icon) and text ("Sword").
+2. Apple:
+   - Quantifying strategy: Stacked (at most: 100 items).
+   - Usage strategies:
+     - Code that lowers user's "hunger" by 10 points (also, the main usage strategy).
+   - Spatial Strategies:
+     - A single position in a very basic inventory settings (almost all games match this).
+   - Rendering Strategies:
+     - A single rendering strategy displaying image (an apple icon) and text ("Apple").
+
 ### Assets: Inventory registries
 
 Registries are also an important part and are also created as assets. This time, with the menu:
