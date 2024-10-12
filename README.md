@@ -50,9 +50,7 @@ Serializable / inspector properties are:
 
 1. `Registry`: Stands for an `ItemRegistry` (described in this section, later) assigned to this item to have it registered.
 2. `Key`: Stands for a non-zero `uint` assigned s key. It must be unique among items assigned to the sme registry for it to be registered.
-3. `Quantifying Strategy`: Stands for an instance of `AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.QuantifyingStrategies.ItemQuantifyingStrategy`.
-   Strategies will be described later. This one in particular is related to how the item is quantified. It is mandatory. Typically, there's no need to create custom child
-   classes of quantifying strategies, since most games use numeric amounts or non-stackable objects.
+3. `Max Stack Quantity` and `Amount Per Unit`: Stand for the current quantity and max. quantity of the item.
 4. `Spatial Strategies`: Stands for an array of instances of `AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.SpatialStrategies.ItemSpatialStrategy`.
    Strategies will be described later. These in particular are related to how the item is positioned. It is mandatory to have at least one spatial strategy, but only one
    instance per spatial strategy class is allowed. Having different spatial strategies will allow stacks of this item to be placed inside more types of inventories.
@@ -71,15 +69,16 @@ Also, public properties and methods are:
 1. `public bool Registered { get; }`: Tells that this item is registered in a registry. For this, it must have a Registry assigned to it and a non-zero key.
 2. `public ItemRegistry Registry { get; }`: Tells the assigned Registry to this item.
 3. `public uint Key { get; }`:  Returns the assigned key.
-4. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.QuantifyingStrategies.ItemQuantifyingStrategy QuantifyingStrategy`: Returns the assigned quantifying strategy.
-5. `public T GetSpatialStrategy<T>() where T : AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.SpatialStrategies.ItemSpatialStrategy`: Returns a spatial strategy instance by its class. Returns `null` if not found.
-6. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.SpatialStrategies.ItemSpatialStrategy GetSpatialStrategy(Type type)`: Returns a spatial strategy instance but by passing the type as value.
-7. `public T GetUsageStrategy<T>() where T : AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.UsageStrategies.ItemUsageStrategy`: Returns a usage strategy instance by its class. Returns `null` if not found.
-8. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.UsageStrategies.ItemUsageStrategy GetUsageStrategy(Type type)`: Returns a usage strategy instance but by passing the type as value.
-9. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.UsageStrategies.ItemUsageStrategy MainUsageStrategy`: Returns the assigned main strategy.
-10. `public T GetRenderingStrategy<T>() where T : AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.RenderingStrategies.ItemRenderingStrategy`: Returns a rendering strategy instance by its class. Returns `null` if not found.
-11. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.RenderingStrategies.ItemRenderingStrategy GetRenderingStrategy(Type type)`: Returns a rendering strategy instance but by passing the type as value.
-12. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.RenderingStrategies.ItemRenderingStrategy MainRenderingStrategy`: Returns the assigned main strategy.
+4. `public int MaxStackQuantity { get; }`: Returns the maximum quantity allowed in the stacks of this item.
+5. `public int AmountPerUnit { get; }`: Returns the integer value that represents, visually, a single unit.
+6. `public T GetSpatialStrategy<T>() where T : AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.SpatialStrategies.ItemSpatialStrategy`: Returns a spatial strategy instance by its class. Returns `null` if not found.
+7. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.SpatialStrategies.ItemSpatialStrategy GetSpatialStrategy(Type type)`: Returns a spatial strategy instance but by passing the type as value.
+8. `public T GetUsageStrategy<T>() where T : AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.UsageStrategies.ItemUsageStrategy`: Returns a usage strategy instance by its class. Returns `null` if not found.
+9. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.UsageStrategies.ItemUsageStrategy GetUsageStrategy(Type type)`: Returns a usage strategy instance but by passing the type as value.
+10. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.UsageStrategies.ItemUsageStrategy MainUsageStrategy`: Returns the assigned main strategy.
+11. `public T GetRenderingStrategy<T>() where T : AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.RenderingStrategies.ItemRenderingStrategy`: Returns a rendering strategy instance by its class. Returns `null` if not found.
+12. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.RenderingStrategies.ItemRenderingStrategy GetRenderingStrategy(Type type)`: Returns a rendering strategy instance but by passing the type as value.
+13. `public AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.RenderingStrategies.ItemRenderingStrategy MainRenderingStrategy`: Returns the assigned main strategy.
 
 This is quite important for the items themselves. While they are _passive_ objects, they provide all the underlying elements for the _active_ objects to exist.
 
@@ -88,7 +87,8 @@ _Again: strategies will be described later_.
 An example to understand how an item is defined would look like this:
 
 1. Sword:
-   - Quantifying strategy: Non-stacked.
+    - Max Stack Quantity: 1.
+    - Amount per Unit: 1.
    - Usage strategies:
      - Code that harms the player in front (also, the main usage strategy).
    - Spatial Strategies:
@@ -96,7 +96,8 @@ An example to understand how an item is defined would look like this:
    - Rendering Strategies:
      - A single rendering strategy displaying image (a sword icon) and text ("Sword").
 2. Apple:
-   - Quantifying strategy: Stacked (at most: 100 items).
+   - Max Stack Quantity: 100.
+   - Amount per Unit: 1.
    - Usage strategies:
      - Code that lowers user's "hunger" by 10 points (also, the main usage strategy).
    - Spatial Strategies:
@@ -135,48 +136,6 @@ Strategies are assets that act as subcomponents that can (and will) be added to 
 
 Some strategy assets are shared among many items, to the point that perhaps only one strategy instance is needed.
 
-#### Quantifying Strategies
-
-The quantifying strategies are those that define how will this object be stacked in a single place (e.g. potions being stacked up to 100).
-
-There are three subtypes:
-
-##### Quantifying Strategy: Unstacked
-
-This quantifying strategy is for objects that cannot be grouped together. Typically, weapons or big items.
-
-They can be created by clicking this menu option:
-
-```
-Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Quantifying/Unstacked
-```
-
-This asset requires no configuration. It can be directly used as a quantifying strategy on any one or more inventory item.
-
-Only one item of this type is needed.
-
-##### Quantifying Strategy: Integer-Stacked
-
-This quantifying strategy is for objects that can be grouped together. Typically, consumable items.
-
-They can be created by clicking this menu options:
-
-```
-Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Quantifying/Integer-Stacked
-```
-
-This asset requires a configuration: a `Max` integer value. E.g. `100`. Many items may share this quantifying strategy.
-
-One is needed for each maximum quantity that needs to be defined (e.g. one for 100, one for 25, ...).
-
-##### Quantifying Strategy: Float-Stacked
-
-This is less common: Works the same as Integer-Stacked but with float values.
-
-```
-Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Quantifying/Float-Stacked
-```
-
 #### Spatial Strategies
 
 Spatial strategies tell how an item is stored in an inventory. Each item needs at least one spatial strategy, and each
@@ -203,7 +162,7 @@ its index.
 In order to create this strategy object, this is the menu option:
 
 ```
-Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Quantifying/Float-Stacked
+Assets/Create/Aleph Vault/BackPack/Inventory/Item Strategies/Spatial/1D Indexed
 ```
 
 Only one asset of this type is needed, and can be added to as many items as needed.
