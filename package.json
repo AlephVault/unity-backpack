@@ -1,12 +1,12 @@
 {
   "name": "com.alephvault.unity.backpack",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "displayName": "Aleph Vault - Unity - BackPack",
   "description": "Allows the developer to create inventory rulesets and models, and also some default UI implementation.",
-  "unity": "2018.1",
+  "unity": "2023.2",
   "dependencies": {
-    "com.alephvault.unity.support": "0.0.1",
-    "com.alephvault.unity.layout": "0.0.1",
+    "com.alephvault.unity.support": "0.0.2",
+    "com.alephvault.unity.layout": "0.0.2",
     "com.alephvault.unity.menuactions": "0.0.2"
   },
   "author": {
