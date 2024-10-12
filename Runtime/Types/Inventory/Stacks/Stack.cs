@@ -184,8 +184,13 @@ namespace AlephVault.Unity.BackPack
                             index++;
                         }
 
-                        return new Stack(Item, clonedUsageStrategies, clonedMainUsageStrategy,
-                                         clonedRenderingStrategies, clonedMainRenderingStrategy);
+                        Stack item = new Stack(
+                            Item, clonedUsageStrategies, clonedMainUsageStrategy,
+                            clonedRenderingStrategies, clonedMainRenderingStrategy
+                        ) {
+                            Quantity = quantity
+                        };
+                        return item;
                     }
 
                     /// <summary>
@@ -229,7 +234,7 @@ namespace AlephVault.Unity.BackPack
                             quantity = Quantity;
                         }
 
-                        if ((!disallowEmpty || quantity.Value != Quantity) && ChangeQuantityBy((int)quantity.Value))
+                        if ((!disallowEmpty || quantity.Value != Quantity) && ChangeQuantityBy((int)-quantity.Value))
                         {
                             return Clone(quantity.Value);
                         }

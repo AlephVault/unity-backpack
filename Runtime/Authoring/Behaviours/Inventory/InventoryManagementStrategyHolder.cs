@@ -220,7 +220,7 @@ namespace AlephVault.Unity.BackPack
                     ///     but only returns the first matched stack, or null.
                     /// </summary>
                     /// <param name="containerPosition">The ID of the spatial container</param>
-                    /// <param name="predicate">The predicate they must satisfy</param>
+                    /// <param name="item">The item being searched for</param>
                     /// <param name="reverse">Whether the items should be traversed in reverse or straight way</param>
                     /// <returns>The first stack matched</returns>
                     public Stack FindOne(object containerPosition, ScriptableObjects.Inventory.Items.Item item, bool reverse = false)
@@ -256,10 +256,8 @@ namespace AlephVault.Unity.BackPack
                         //   queued in the list above.
                         foreach (Stack matchedStack in matchedStacks)
                         {
-                            int quantityAdded;
                             int quanityLeft;
-                            int finalQuantity;
-                            bool wouldSaturate = matchedStack.WillOverflow(currentQuantity, out finalQuantity, out quantityAdded, out quanityLeft);
+                            bool wouldSaturate = matchedStack.WillOverflow(currentQuantity, out int _, out int _, out quanityLeft);
                             if (wouldSaturate)
                             {
                                 currentQuantity = quanityLeft;
@@ -282,7 +280,7 @@ namespace AlephVault.Unity.BackPack
                             {
                                 queuedStack.Saturate();
                             }
-                            unsaturatedLastStack.ChangeQuantityBy((int)currentQuantity);
+                            unsaturatedLastStack.ChangeQuantityBy(currentQuantity);
 
                             // Render everything
                             foreach (Stack queuedStack in stacksToSaturate)
@@ -291,8 +289,8 @@ namespace AlephVault.Unity.BackPack
                             }
                             renderingStrategy.StackWasUpdated(containerPosition, unsaturatedLastStack.QualifiedPosition.Item1, unsaturatedLastStack);
 
-                            // The stack was put, but not on a new position: instead, it filled other stacks and it should be
-                            //   considered destroyed.
+                            // The stack was put, but not on a new position: instead, it filled other stacks, and it should be
+                            // considered destroyed.
                             finalStackPosition = null;
 
                             // Still we return true because the operation was successful.
@@ -507,10 +505,10 @@ namespace AlephVault.Unity.BackPack
                     ///     different inventories. The logic will remain the same, but the events to be triggered will
                     ///     be different.
                     /// </summary>
-                    /// <param name="sourceHolder">The destination inventory managemnt strategy holder</param>
+                    /// <param name="destinationHolder">The destination inventory management strategy holder</param>
                     /// <param name="destinationContainerPosition">The ID of the destination spatial container</param>
                     /// <param name="destinationStackPosition">The position of the destination stack</param>
-                    /// <param name="sourceHolder">The source inventory managemnt strategy holder</param>
+                    /// <param name="sourceHolder">The source inventory management strategy holder</param>
                     /// <param name="sourceContainerPosition">The ID of the source spatial container</param>
                     /// <param name="sourceStackPosition">The position of the source stack</param>
                     /// <returns>
@@ -620,7 +618,7 @@ namespace AlephVault.Unity.BackPack
                             if (!Put(newContainerPosition, newStackPosition, newStack, out finalNewStackPosition))
                             {
                                 // Could not put the new stack - refund its quantity.
-                                found.ChangeQuantityBy((int)quantity);
+                                found.ChangeQuantityBy(quantity);
                                 return false;
                             }
                             else
@@ -662,7 +660,7 @@ namespace AlephVault.Unity.BackPack
                     ///     callback will be also given.
                     /// </summary>
                     /// <param name="containerPosition">The ID of the spatial container</param>
-                    /// <param name="stackPosition">The position of the stack being used</param>
+                    /// <param name="sourceStackPosition">The position of the stack being used</param>
                     /// <param name="argument">The argument for the usage command</param>
                     /// <returns>Whether the usage interaction could be run</returns>
                     public bool Use(object containerPosition, object sourceStackPosition, object argument)
@@ -735,7 +733,7 @@ namespace AlephVault.Unity.BackPack
                     /// <param name="containerPosition">The ID of the container</param>
                     public void Blink(object containerPosition)
                     {
-                        IEnumerable<Tuple<object, Stack>> pairs = null;
+                        IEnumerable<Tuple<object, Stack>> pairs;
 
                         try
                         {
@@ -781,16 +779,15 @@ namespace AlephVault.Unity.BackPack
                                 ScriptableObjects.Inventory.Items.Item item = ScriptableObjects.Inventory.Items.ItemRegistry.GetItem(stackPair.Value.Item1, stackPair.Value.Item2);
                                 if (item != null)
                                 {
-                                    object finalStackPosition;
-                                    Put(containerPair.Key, stackPair.Key, item.Create(stackPair.Value.Item3, stackPair.Value.Item4), out finalStackPosition);
+                                    Put(containerPair.Key, stackPair.Key, item.Create(stackPair.Value.Item3, stackPair.Value.Item4), out object _);
                                 }
                             }
                         }
                     }
 
                     /// <summary>
-                    ///   Counterpart of <see cref="Import(Types.Inventory.SerializedInventory)"/>, this method
-                    ///     serializes the content of the inventory.
+                    ///   Counterpart of <see cref="Import(AlephVault.Unity.BackPack.Types.Inventory.SerializedInventory)"/>, this method
+                    ///   serializes the content of the inventory.
                     /// </summary>
                     /// <returns>The serialized content</returns>
                     public Types.Inventory.SerializedInventory Export()
@@ -831,7 +828,7 @@ namespace AlephVault.Unity.BackPack
                     {
                         serializedObject.Update();
 
-                        InventoryManagementStrategyHolder underlyingObject = (serializedObject.targetObject as InventoryManagementStrategyHolder);
+                        InventoryManagementStrategyHolder underlyingObject = (InventoryManagementStrategyHolder)serializedObject.targetObject;
                         InventoryUsageManagementStrategy[] strategies = underlyingObject.GetComponents<InventoryUsageManagementStrategy>();
                         GUIContent[] strategyNames = (from strategy in strategies select new GUIContent(strategy.GetType().Name)).ToArray();
 
