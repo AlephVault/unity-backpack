@@ -96,7 +96,7 @@ namespace AlephVault.Unity.BackPack
 
                     /// <summary>
                     ///   Creates a stack. You will never manually instantiate a stack but instead invoke
-                    ///    <see cref="ScriptableObjects.Inventory.Items.Item.Create(object, object)"/>.
+                    ///    <see cref="AlephVault.Unity.BackPack.Authoring.ScriptableObjects.Inventory.Items.Item.Create(int, object)"/>.
                     /// </summary>
                     /// <param name="item">The item to refer from this stack</param>
                     /// <param name="usageStrategies">Many stack usage strategies</param>
@@ -234,7 +234,7 @@ namespace AlephVault.Unity.BackPack
                             quantity = Quantity;
                         }
 
-                        if ((!disallowEmpty || quantity.Value != Quantity) && ChangeQuantityBy((int)-quantity.Value))
+                        if ((!disallowEmpty || quantity.Value != Quantity) && ChangeQuantityBy(-quantity.Value))
                         {
                             return Clone(quantity.Value);
                         }
